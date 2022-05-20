@@ -5,7 +5,8 @@ if option == '2D Model Page':
 
     st.title('Program for creating 2D lattice spring model')
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
-    SIZE = 100
+    SIZE = st.number_input("Enter a value size", min_value= 50, max_value= 150, value=100, step= 1
+    )
 
     # The value of residual forces when the system has reached a solution
     EPSILON = 1e-10
