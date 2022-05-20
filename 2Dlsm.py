@@ -305,6 +305,7 @@ OUTPUT = open("lsm.csv", "w")
 X = 0
 while(X < SIZE):
     Y = 0
+    OUTPUT.write('table head' + "\t" 'table head 2'  + "\t"+ 'table head 3' + "\t"+ 'table head 4'+ "\t"+ 'table head 5' + "\t"+ 'table head 6' "\n")
     while(Y < SIZE):
         string = str(X) + "\t" + str(Y) + "\t" + str(STRAIN[X][Y]) + "\t" + str(DX[X][Y]) + "\t" + str(DY[X][Y]) + "\t" + str(ELASTIC[X][Y]) + "\n"
         OUTPUT.write(string);
@@ -314,4 +315,4 @@ while(X < SIZE):
     X = X + 1
 
 with open('lsm.csv') as f:
-    st.download_button('Download .dat', f,'aaa.dat', 'text/dat')
+    st.download_button('Download dat file', f,'lsm2d.dat', 'text/dat')
