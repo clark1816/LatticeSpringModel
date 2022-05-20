@@ -1,5 +1,5 @@
 import streamlit as st
-
+st.title('Program for creating 2D lattice spring model')
 # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
 SIZE = 100
 
@@ -313,5 +313,5 @@ while(X < SIZE):
     OUTPUT.write(string);
     X = X + 1
 
-df = OUTPUT
-st.download_button(label= 'Download output', data='working on feature')
+with open('lsm.csv') as f:
+    st.download_button('Download CSV', f)
