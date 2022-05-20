@@ -314,4 +314,4 @@ while(X < SIZE):
     X = X + 1
 
 with open('lsm.csv') as f:
-    st.download_button('Download CSV', f)
+    st.download_button('Download .dat', f,'aaa.dat', 'text/dat')
