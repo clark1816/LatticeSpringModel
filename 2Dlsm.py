@@ -288,7 +288,7 @@ if option == '2D Model Page':
 
     st.write('Youngs modulus = ', YOUNG)
     st.write('Poissons ratio = ', POISSON)
-    print('\n')
+    st.balloons()
 
     # Calculate strain in tensile direction only 
     X = 0
