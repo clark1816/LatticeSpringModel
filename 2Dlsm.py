@@ -1,26 +1,20 @@
-import streamlit as st
 import plotly_express as px
+import streamlit as st
 import pandas as pd
-import openpyxl
-option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 1)
+
+option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 2)
 st.header(option)
 
 if option == '2D Model Page':
+
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
-    SIZE = st.number_input("Enter a value size", min_value= 50, max_value= 150, value=50, step= 1
-    )
+    SIZE = 100
 
     # The value of residual forces when the system has reached a solution
-    EPSILON = 1e-10
-    try:
-    # The force applied to the boundary nodes (negative to left and positive to right)
-        FORCE = st.number_input("Enter a value for force",
-        )
-    except Exception as e: 
-        st.write('Please enter a value ')
+    EPSILON = 1e-5
 
-    # A stiff plate at the X = 0 and X = SIZE-1 boundaries
-    BOUND = 0.
+    # The force applied to the boundary nodes (negative to left and positive to right)
+    FORCE = 0.1
 
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
     ELASTIC = [[0. for col in range(SIZE) ] for row in range(SIZE)]
@@ -47,7 +41,7 @@ if option == '2D Model Page':
         while(Y < SIZE):
             ELASTIC[X][Y] = 1.
             R = (X-0.5*SIZE)*(X-0.5*SIZE)+(Y-0.5*SIZE)*(Y-0.5*SIZE)
-            if(R < 100.): ELASTIC[X][Y] = 10.
+            #if(R < 100.): ELASTIC[X][Y] = 10.
             Y = Y + 1
         X = X + 1
 
@@ -73,6 +67,7 @@ if option == '2D Model Page':
     # Calculate Initial R
     with st.spinner('Calculating Results...'):
         RR = 0.
+
         X = 0
         while(X < SIZE):
             Y = 0
@@ -104,19 +99,11 @@ if option == '2D Model Page':
                     if(i > 4):
                         if(X == 0 and Y == 0): 
                             K = K * 2.
-                        if(X2 == 0 and Y2 == 0): 
-                            K = K * 2.
                         if(X == SIZE-1 and Y == 0): 
-                            K = K * 2.
-                        if(X2 == SIZE-1 and Y2 == 0): 
                             K = K * 2.
                         if(X == 0 and Y == SIZE-1): 
                             K = K * 2.
-                        if(X2 == 0 and Y2 == SIZE-1): 
-                            K = K * 2.
                         if(X == SIZE-1 and Y == SIZE-1): 
-                            K = K * 2.
-                        if(X2 == SIZE-1 and Y2 == SIZE-1): 
                             K = K * 2.
                         
                     dx = DX[X2][Y2] - DX[X][Y]
@@ -135,11 +122,7 @@ if option == '2D Model Page':
                     if(i == 7 or i == 8): 
                         AX -= 0.25 * (K * dx - K * dy)
                         AY -= 0.25 * (-K * dx + K * dy)
-                        
-                    if(i == 3 or i == 4):
-                        if(X == 0 or X == SIZE-1):
-                            AX -= BOUND * dx;
-                    
+                                    
                     i = i + 1
                     
                 if(X == 0): 
@@ -195,19 +178,11 @@ if option == '2D Model Page':
                         if(i > 4):
                             if(X == 0 and Y == 0): 
                                 K = K * 2.
-                            if(X2 == 0 and Y2 == 0): 
-                                K = K * 2.
                             if(X == SIZE-1 and Y == 0): 
-                                K = K * 2.
-                            if(X2 == SIZE-1 and Y2 == 0): 
                                 K = K * 2.
                             if(X == 0 and Y == SIZE-1): 
                                 K = K * 2.
-                            if(X2 == 0 and Y2 == SIZE-1): 
-                                K = K * 2.
                             if(X == SIZE-1 and Y == SIZE-1): 
-                                K = K * 2.
-                            if(X2 == SIZE-1 and Y2 == SIZE-1): 
                                 K = K * 2.
                         
                         dx = XP[X2][Y2] - XP[X][Y]
@@ -226,11 +201,7 @@ if option == '2D Model Page':
                         if(i == 7 or i == 8): 
                             XAP[X][Y] -= 0.25 * (K * dx - K * dy)
                             YAP[X][Y] -= 0.25 * (-K * dx + K * dy)
-                        
-                        if(i == 3 or i == 4):
-                            if(X == 0 or X == SIZE-1):
-                                XAP[X][Y] -= BOUND * dx;
-                    
+                                    
                         i = i + 1
                     
                     PAP += XP[X][Y] * XAP[X][Y]
@@ -260,8 +231,8 @@ if option == '2D Model Page':
                     Y = Y + 1
                 X = X + 1
             
-            print('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), end="\r")
-
+            print('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), '          ', end="\r")
+            
             if(RR1 < MIN): MIN = RR1
             
             BETA = RR1/RR
@@ -281,6 +252,7 @@ if option == '2D Model Page':
             
             if(RR > 1000.*MIN):
                 print('Looks like system is not converging')
+            
 
         # Once it's solved we have to decide what to output!
 
@@ -306,13 +278,11 @@ if option == '2D Model Page':
         YOUNG = (SIZE - 1.) * (FORCE / XSYST)
         POISSON = YSYST/XSYST
     st.success('Done!')
-    #report section
-    st.write ('Results for force = ', FORCE)
+    #report section 
     st.write('Residual = ', RR)
     st.write('Youngs modulus = ', YOUNG)
     st.write('Poissons ratio = ', POISSON)
-    
-    st.write('\n')
+    print('\n')
 
     # Calculate strain in tensile direction only 
     X = 0
@@ -326,27 +296,24 @@ if option == '2D Model Page':
             Y = Y + 1
         X = X + 1
 
-
     OUTPUT = open("lsm.dat", "w")
     X = 0
+    OUTPUT.write('x' + ',' + 'y' + ',' + 'z' + "\n")
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
-            string = str(X) + "\t" + str(Y) + "\t" + str(STRAIN[X][Y]) + "\t" + str(DX[X][Y]) + "\t" + str(DY[X][Y]) + "\t" + str(ELASTIC[X][Y]) + "\n"
+            string = str(X) + ',' + str(Y) + ',' + str(STRAIN[X][Y]) + "\n"
             OUTPUT.write(string);
             Y = Y + 1
-        #string = "\n"
         OUTPUT.write(string);
         X = X + 1
-
     with open('lsm.dat') as f:
-        st.download_button('Download dat file', f,'lsm2d.dat', 'text/dat')
-        st.balloons()
-    
+        st.download_button('Download dat file', f,'lsm2d.csv', 'text/csv')
+
+
 if option == '2D Graph Page':
     st.write('upload excel file')
-    uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx'])
-
+    uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv'])
     if uploaded_file is not None:
         try:
             df = pd.read_csv(uploaded_file)
@@ -354,11 +321,30 @@ if option == '2D Graph Page':
             print(e)
             df = pd.read_excel(uploaded_file)
     try:
-        st.write(df)
+        #plot
+        plot = px.density_contour(
+            data_frame=df,
+            x='x',
+            y='y',
+            z='z'
+        )
+        st.write(plot)
     except Exception as e: 
         print(e)
         st.write('Please upload file to the application ')
-            
+
+# #Use matplotlib????
+#  PX, PY = np.meshgrid(np.linspace(0, SIZE-1, SIZE), np.linspace(0, SIZE-1, SIZE))
+#  Z = np.asarray(STRAIN)
+#  levels = np.linspace(Z.min(), Z.max(), 7)
+
+# # # plot
+#  fig, ax = plt.subplots()
+#  ax.contourf(PX, PY, Z, levels=levels)
+#  plt.show()
+
+
+
 
 
 
