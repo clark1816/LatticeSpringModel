@@ -334,7 +334,7 @@ if option == '2D Model Page':
         OUTPUT.write(string);
         X = X + 1
 
-    with open('lsm.csv') as f:
+    with open('lsm.dat') as f:
         st.download_button('Download dat file', f,'lsm2d.dat', 'text/dat')
         st.balloons()
     
