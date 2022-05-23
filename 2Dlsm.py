@@ -1,4 +1,7 @@
 import streamlit as st
+import plotly_express as px
+import pandas as pd
+import openpyxl
 option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 1)
 st.header(option)
 
@@ -9,10 +12,12 @@ if option == '2D Model Page':
 
     # The value of residual forces when the system has reached a solution
     EPSILON = 1e-10
-
+    try:
     # The force applied to the boundary nodes (negative to left and positive to right)
-    FORCE = st.number_input("Enter a value for force",
-    )
+        FORCE = st.number_input("Enter a value for force",
+        )
+    except Exception as e: 
+        st.write('Please enter a value ')
 
     # A stiff plate at the X = 0 and X = SIZE-1 boundaries
     BOUND = 0.
@@ -330,7 +335,7 @@ if option == '2D Model Page':
             string = str(X) + "\t" + str(Y) + "\t" + str(STRAIN[X][Y]) + "\t" + str(DX[X][Y]) + "\t" + str(DY[X][Y]) + "\t" + str(ELASTIC[X][Y]) + "\n"
             OUTPUT.write(string);
             Y = Y + 1
-        string = "\n"
+        #string = "\n"
         OUTPUT.write(string);
         X = X + 1
 
@@ -338,7 +343,22 @@ if option == '2D Model Page':
         st.download_button('Download dat file', f,'lsm2d.dat', 'text/dat')
         st.balloons()
     
+if option == '2D Graph Page':
+    st.write('upload excel file')
+    uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx'])
 
+    if uploaded_file is not None:
+        try:
+            df = pd.read_csv(uploaded_file)
+        except Exception as e:
+            print(e)
+            df = pd.read_excel(uploaded_file)
+    try:
+        st.write(df)
+    except Exception as e: 
+        print(e)
+        st.write('Please upload file to the application ')
+            
 
 
 
