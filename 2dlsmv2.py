@@ -1,17 +1,15 @@
-from struct import unpack
 import plotly_express as px
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-
+import plotly.graph_objects as go
+import numpy as np 
 option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 2)
 st.header(option)
 
 if option == '2D Model Page':
 
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
-    SIZE = 50
+    SIZE = 100
 
     # The value of residual forces when the system has reached a solution
     EPSILON = 1e-5
@@ -305,36 +303,44 @@ if option == '2D Model Page':
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
-            string = str(X) + ',' + str(Y) + ',' + str(STRAIN[X][Y]) + "\n"
+            string = str(X) + ' ' + str(Y) + ' ' + str(STRAIN[X][Y]) + "\n"
             OUTPUT.write(string);
             Y = Y + 1
         OUTPUT.write(string);
         X = X + 1
     with open('lsm.dat') as f:
-        st.download_button('Download dat file', f,'lsm2d.csv', 'text/csv')
+        st.download_button('Download dat file', f,'lsm2d.txt', 'text/csv')
 
 
 if option == '2D Graph Page':
     st.write('upload excel file')
     uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv'])
     if uploaded_file is not None:
-        # try:
-        #     df = pd.read_csv(uploaded_file)
-        # except Exception as e:
-        #     print(e)
-        #     df = pd.read_excel(uploaded_file)
         try:
-        #plot
-            x, y, z = np.loadtxt(uploaded_file, delimiter = ',', unpack = True)
-            z = [z]
-            fig = plt.figure()
-            ax = fig.add_subplot(1111, 1111, 1111)
-            u = np.linspace(-1,1,100)
-            ax.contourf(x,y,z)
-            plt.show()
-        except Exception as e: 
+            df = pd.read_csv(uploaded_file)
+        except Exception as e:
             print(e)
-            st.write('Please upload file to the application ')
+            df = pd.read_excel(uploaded_file)
+    try:
+        #plot
+        pts = np.loadtxt(np.DataSource().open('/Users/kellymcquiston/Desktop/pythonfolder/raw.githubusercontent.com/plotly/datasets/master/lsm2d.txt'))
+        x, y, z = pts.T
+
+        fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
+                   alphahull=5,
+                   opacity=0.4,
+                   color='cyan')])
+        fig.show()
+        # plot = px.density_contour(
+        #     data_frame=df,
+        #     x='x',
+        #     y='y',
+        #     z='z'
+        # )
+        # st.write(plot)
+    except Exception as e: 
+        print(e)
+        st.write('Please upload file to the application ')
 
 # #Use matplotlib????
 #  PX, PY = np.meshgrid(np.linspace(0, SIZE-1, SIZE), np.linspace(0, SIZE-1, SIZE))
@@ -345,6 +351,7 @@ if option == '2D Graph Page':
 #  fig, ax = plt.subplots()
 #  ax.contourf(PX, PY, Z, levels=levels)
 #  plt.show()
+
 
 
 
