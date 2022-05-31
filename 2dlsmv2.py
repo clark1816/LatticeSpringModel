@@ -1,4 +1,3 @@
-import plotly_express as px
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -326,27 +325,18 @@ if option == '2D Graph Page':
         pts = np.loadtxt(np.DataSource().open('https://raw.githubusercontent.com/clark1816/LatticeSpringModel/main/2dlsm.txt'))
         x, y, z = pts.T
 
-        fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
-                   alphahull=5,
-                   opacity=0.4,
-                   color='cyan')])
-        fig.show()
+        # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
+        #            alphahull=5,
+        #            opacity=0.4,
+        #            color='cyan')])
+        # fig.show()
         fig2 = go.Figure(data = 
             go.Contour(z=z, x=x, y=y))
-        fig2.show()
+        st.write(fig2)
     except Exception as e: 
         print(e)
         st.write('Please upload file to the application ')
 
-# #Use matplotlib????
-#  PX, PY = np.meshgrid(np.linspace(0, SIZE-1, SIZE), np.linspace(0, SIZE-1, SIZE))
-#  Z = np.asarray(STRAIN)
-#  levels = np.linspace(Z.min(), Z.max(), 7)
-
-# # # plot
-#  fig, ax = plt.subplots()
-#  ax.contourf(PX, PY, Z, levels=levels)
-#  plt.show()
 
 
 
