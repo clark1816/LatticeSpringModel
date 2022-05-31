@@ -314,16 +314,16 @@ if option == '2D Model Page':
 
 if option == '2D Graph Page':
     st.write('upload excel file')
-    uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv'])
+    uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv','txt'])
     if uploaded_file is not None:
         try:
             df = pd.read_csv(uploaded_file)
         except Exception as e:
             print(e)
-            df = pd.read_excel(uploaded_file)
+            df = pd.read_txt(uploaded_file)
     try:
-        #plot
-        pts = np.loadtxt(np.DataSource().open('/Users/kellymcquiston/Desktop/pythonfolder/raw.githubusercontent.com/plotly/datasets/master/lsm2d.txt'))
+        #plots mesh3d
+        pts = np.loadtxt(np.DataSource().open('https://raw.githubusercontent.com/clark1816/LatticeSpringModel/main/2dlsm.txt'))
         x, y, z = pts.T
 
         fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
@@ -331,13 +331,9 @@ if option == '2D Graph Page':
                    opacity=0.4,
                    color='cyan')])
         fig.show()
-        # plot = px.density_contour(
-        #     data_frame=df,
-        #     x='x',
-        #     y='y',
-        #     z='z'
-        # )
-        # st.write(plot)
+        fig2 = go.Figure(data = 
+            go.Contour(z=z, x=x, y=y))
+        fig2.show()
     except Exception as e: 
         print(e)
         st.write('Please upload file to the application ')
