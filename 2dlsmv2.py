@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 2)
+option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page'), 1)
 st.header(option)
 
 if option == '2D Model Page':
@@ -296,7 +296,7 @@ if option == '2D Model Page':
             Y = Y + 1
         X = X + 1
 
-    OUTPUT = open("lsm.dat", "w")
+    OUTPUT = open("lsm.txt", "w")
     X = 0
     #OUTPUT.write('x' + ',' + 'y' + ',' + 'z' + "\n")
     while(X < SIZE):
@@ -307,12 +307,18 @@ if option == '2D Model Page':
             Y = Y + 1
         OUTPUT.write(string);
         X = X + 1
-    with open('lsm.dat') as f:
+    
+    pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
+    x, y, z = pts.T
+    
+    fig2 = go.Figure(data = go.Contour(z=z, x=x, y=y))
+    st.write(fig2)
+
+    with open('lsm.txt') as f:
         st.download_button('Download dat file', f,'lsm2d.txt', 'text/csv')
 
 
 if option == '2D Graph Page':
-    st.write('upload excel file')
     uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv','txt'])
     if uploaded_file is not None:
         try:
@@ -320,22 +326,23 @@ if option == '2D Graph Page':
         except Exception as e:
             print(e)
             df = pd.read_txt(uploaded_file)
-    try:
-        #plots mesh3d
-        pts = np.loadtxt(np.DataSource().open('https://raw.githubusercontent.com/clark1816/LatticeSpringModel/main/2dlsm.txt'))
-        x, y, z = pts.T
+            
+        try:
+            #plots mesh3d
+            pts = np.loadtxt(uploaded_file, delimiter=' ', unpack=True)
+            x, y, z = pts.T
 
-        # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
-        #            alphahull=5,
-        #            opacity=0.4,
-        #            color='cyan')])
-        # fig.show()
-        fig2 = go.Figure(data = 
-            go.Contour(z=z, x=x, y=y))
-        st.write(fig2)
-    except Exception as e: 
-        print(e)
-        st.write('Please upload file to the application ')
+            # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
+            #            alphahull=5,
+            #            opacity=0.4,
+            #            color='cyan')])
+            # fig.show()
+            fig2 = go.Figure(data = 
+                go.Contour(z=z, x=x, y=y))
+            st.write(fig2)
+        except Exception as e: 
+            print(e)
+            st.write('Please upload file to the application ')
 
 
 
