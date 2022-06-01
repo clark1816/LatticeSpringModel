@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page'), 1)
+option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 2)
 st.header(option)
 
 if option == '2D Model Page':
@@ -31,9 +31,9 @@ if option == '2D Model Page':
 
     IX = [0 for col in range(9) ]
     IY = [0 for col in range(9) ]
-
-    STRAIN = [[0. for col in range(SIZE) ] for row in range(SIZE)]
-
+    x = st.number_input("Enter a value for strain ", min_value= 0, max_value= 100, value=1, step= 1)
+    STRAIN = [[x for col in range(SIZE) ] for row in range(SIZE)]
+    
     # This is where the Elastic constants have to be loaded in. Say, from 1 to 10 in terms of the values. 
     X = 0
     while(X < SIZE):
@@ -298,7 +298,6 @@ if option == '2D Model Page':
 
     OUTPUT = open("lsm.txt", "w")
     X = 0
-    #OUTPUT.write('x' + ',' + 'y' + ',' + 'z' + "\n")
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
@@ -326,10 +325,10 @@ if option == '2D Graph Page':
         except Exception as e:
             print(e)
             df = pd.read_txt(uploaded_file)
-            
+            df = "output2.txt"
         try:
             #plots mesh3d
-            pts = np.loadtxt(uploaded_file, delimiter=' ', unpack=True)
+            pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
             x, y, z = pts.T
 
             # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
