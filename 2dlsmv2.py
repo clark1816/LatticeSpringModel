@@ -32,7 +32,7 @@ if option == '2D Model Page':
     IX = [0 for col in range(9) ]
     IY = [0 for col in range(9) ]
     x = st.number_input("Enter a value for strain ", min_value= 0, max_value= 100, value=1, step= 1)
-    STRAIN = [[x for col in range(SIZE) ] for row in range(SIZE)]
+    STRAIN = [[0.1. for col in range(SIZE) ] for row in range(SIZE)]
     
     # This is where the Elastic constants have to be loaded in. Say, from 1 to 10 in terms of the values. 
     X = 0
