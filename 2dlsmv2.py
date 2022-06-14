@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '2D Graph Page'), 1)
+option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '3D Graph Page'), 1)
 st.header(option)
 
 if option == '2D Model Page':
