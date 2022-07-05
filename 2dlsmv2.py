@@ -82,6 +82,7 @@ if option == '2D Model Page':
     # Calculate Initial R
     if st.button("Run"):
         with st.spinner('Calculating Results...'):
+            my_bar = st.progress(0)
             RR = 0.
             X = 0
             while(X < SIZE):
@@ -322,11 +323,11 @@ if option == '2D Model Page':
             OUTPUT.write(string)
             X = X + 1
     
-    pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
-    x, y, z = pts.T
-    
-    fig2 = go.Figure(data = go.Contour(z=z, x=x, y=y))
-    st.write(fig2)
+        pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
+        x, y, z = pts.T
+        
+        fig2 = go.Figure(data = go.Contour(z=z, x=x, y=y))
+        st.write(fig2)
 
     with open('lsm.txt') as f:
         st.download_button('Download dat file', f,'result.csv', 'text/csv')
