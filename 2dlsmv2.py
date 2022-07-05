@@ -82,7 +82,6 @@ if option == '2D Model Page':
     # Calculate Initial R
     if st.button("Run"):
         with st.spinner('Calculating Results...'):
-            my_bar = st.progress(0)
             RR = 0.
             X = 0
             while(X < SIZE):
