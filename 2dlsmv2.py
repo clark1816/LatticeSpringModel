@@ -2,9 +2,24 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-option = st.sidebar.selectbox("Which Dashboard?", ('home page', '2D Model Page', '3D Graph Page'), 1)
-st.header(option)
 
+option = st.sidebar.selectbox("Which Dashboard?", ('Home', '2D Model Page','2D Graph Page', '3D Model Page'), 0)
+st.header(option)
+if option == 'Home':
+    st.subheader('2D LSM Informaiton')
+    st.write('info here............................. info.........')
+    st.subheader('3D LSM Information')
+    st.write('info here............................. info.........')
+
+if option == '3D Model Page':
+    x = st.number_input("Enter a value for strain ", min_value= 0, max_value= 100, value=1, step= 1)
+    if st.button("Run"):
+        st.write('Residual = 9.519')
+        st.write('Youngs modulus = 9.519')
+        st.write('Poissons ratio = 9.519')
+        st.title('3D Graph Goes Here')
+        if st.button('Download gcode file'):
+            st.write('Why hello there')
 if option == '2D Model Page':
 
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
@@ -15,9 +30,10 @@ if option == '2D Model Page':
 
     # The force applied to the boundary nodes (negative to left and positive to right)
     FORCE = 0.1
-
+    
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
-    ELASTIC = [[0. for col in range(SIZE) ] for row in range(SIZE)]
+    x = st.number_input("Enter a value for Elastic ", min_value= 0, max_value= 100, value=1, step= 1)
+    ELASTIC = [[x for col in range(SIZE) ] for row in range(SIZE)]
 
     #The solution requires the displacements and other variables
     DX = [[0. for col in range(SIZE) ] for row in range(SIZE)]
@@ -31,9 +47,8 @@ if option == '2D Model Page':
 
     IX = [0 for col in range(9) ]
     IY = [0 for col in range(9) ]
-    x = st.number_input("Enter a value for strain ", min_value= 0, max_value= 100, value=1, step= 1)
-    STRAIN = [[x for col in range(SIZE) ] for row in range(SIZE)]
     
+    STRAIN = [[0. for col in range(SIZE) ] for row in range(SIZE)]
     # This is where the Elastic constants have to be loaded in. Say, from 1 to 10 in terms of the values. 
     X = 0
     while(X < SIZE):
@@ -68,7 +83,6 @@ if option == '2D Model Page':
     if st.button("Run"):
         with st.spinner('Calculating Results...'):
             RR = 0.
-
             X = 0
             while(X < SIZE):
                 Y = 0
@@ -145,7 +159,7 @@ if option == '2D Model Page':
 
             MIN = RR
             # Iteration until desired precision is obtained
-
+            
             while(RR > EPSILON):
                 
                 PAP = 0.
@@ -303,9 +317,9 @@ if option == '2D Model Page':
             Y = 0
             while(Y < SIZE):
                 string = str(X) + ' ' + str(Y) + ' ' + str(STRAIN[X][Y]) + "\n"
-                OUTPUT.write(string);
+                OUTPUT.write(string)
                 Y = Y + 1
-            OUTPUT.write(string);
+            OUTPUT.write(string)
             X = X + 1
     
     pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
@@ -315,28 +329,31 @@ if option == '2D Model Page':
     st.write(fig2)
 
     with open('lsm.txt') as f:
-        st.download_button('Download dat file', f,'lsm2d.txt', 'text/csv')
+        st.download_button('Download dat file', f,'result.csv', 'text/csv')
 
 
 if option == '2D Graph Page':
     uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv','txt'])
     if uploaded_file is not None:
         try:
-            df = pd.read_csv(uploaded_file)
+            df = pd.read_csv(uploaded_file, sep=" ", header=None)
+            #df.columns = ["x", "y", "z"]
+            st.write(df)
+            df.to_csv('results2d.txt',index=False, sep=" ")
         except Exception as e:
             print(e)
-            df = pd.read_txt(uploaded_file)
-            df = "output2.txt"
+            df = pd.read_csv(uploaded_file)
+            st.write(df)
         try:
             #plots mesh3d
-            pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
+            pts = np.loadtxt('results2d.txt',dtype=float, delimiter=' ')
             x, y, z = pts.T
 
-            # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
-            #            alphahull=5,
-            #            opacity=0.4,
-            #            color='cyan')])
-            # fig.show()
+        #     # # fig = go.Figure(data=[go.Mesh3d(x=x, y=y, z=z,
+        #     # #            alphahull=5,
+        #     # #            opacity=0.4,
+        #     # #            color='cyan')])
+        #     # # fig.show()
             fig2 = go.Figure(data = 
                 go.Contour(z=z, x=x, y=y))
             st.write(fig2)
