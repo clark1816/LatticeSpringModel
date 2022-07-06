@@ -2,24 +2,24 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-
+from streamlit import caching
+import time
 option = st.sidebar.selectbox("Which Dashboard?", ('Home', '2D Model Page','2D Graph Page', '3D Model Page'), 0)
 st.header(option)
 if option == 'Home':
     st.subheader('2D LSM Informaiton')
-    st.write('info here............................. info.........')
+    st.write('There are two pages that will help create 2D LSM models. If you do not have a dataset of x,y,z cordintes then use the 2D model page to get a dataset by clicking run and wait for model to appear.')
+    st.write('If you already have have a data set ready then you can use the 2D Graph Page to upload your Excel, CSV, or .txt file. To get the program to run correctly make sure it is formatted the same as the data file from the model page. It should have no column headers. Finally the first column should contain x cordinates, second should contain y cordinates and the third should contain z cordinates.')
     st.subheader('3D LSM Information')
     st.write('info here............................. info.........')
 
 if option == '3D Model Page':
-    x = st.number_input("Enter a value for strain ", min_value= 0, max_value= 100, value=1, step= 1)
-    if st.button("Run"):
-        st.write('Residual = 9.519')
-        st.write('Youngs modulus = 9.519')
-        st.write('Poissons ratio = 9.519')
-        st.title('3D Graph Goes Here')
-        if st.button('Download gcode file'):
-            st.write('Why hello there')
+    with st.empty():
+        for seconds in range(60):
+            st.write(f"⏳ {seconds} seconds have passed")
+            time.sleep(1)
+        st.write("✔️ 1 minute over!")
+
 if option == '2D Model Page':
 
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
@@ -159,7 +159,7 @@ if option == '2D Model Page':
 
             MIN = RR
             # Iteration until desired precision is obtained
-            
+        with st.empty():
             while(RR > EPSILON):
                 
                 PAP = 0.
@@ -245,9 +245,9 @@ if option == '2D Model Page':
                 
                         Y = Y + 1
                     X = X + 1
-                
-                print('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), '          ', end="\r")
-                
+
+                st.write('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), '          ', end="\r")
+
                 if(RR1 < MIN): MIN = RR1
                 
                 BETA = RR1/RR
