@@ -31,7 +31,7 @@ if option == '2D Model Page':
     FORCE = 0.1
     
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
-    x = st.number_input("Enter a value for Elastic ", min_value= 0, max_value= 100, value=1, step= 1)
+    x = st.slider("Enter a value for Elastic ", 0,  10, 1)
     ELASTIC = [[x for col in range(SIZE) ] for row in range(SIZE)]
     #if (X - SIZE/2)*(X-SIZE/2) + (Y-SIZE/2)*(Y-SIZE/2) < R*R:
     #elastic = elastic+1
