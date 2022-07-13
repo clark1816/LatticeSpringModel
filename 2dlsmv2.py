@@ -160,139 +160,139 @@ if option == '2D Model Page':
 
             MIN = RR
             # Iteration until desired precision is obtained
-        with st.empty():
-            while(RR > EPSILON):
-                
-                PAP = 0.
-                
-                X = 0
-                while(X < SIZE):
-                    Y = 0
-                    while(Y < SIZE):
+            with st.empty():
+                while(RR > EPSILON):
                     
-                        XAP[X][Y] = 0.
-                        YAP[X][Y] = 0.
+                    PAP = 0.
                     
-                        i = 1
-                        while(i < 9):
-                            X2 = X + IX[i]
-                            Y2 = Y + IY[i]
+                    X = 0
+                    while(X < SIZE):
+                        Y = 0
+                        while(Y < SIZE):
                         
-                            if(X2 < 0 or X2 > SIZE-1): 
-                                i = i + 1
-                                continue
+                            XAP[X][Y] = 0.
+                            YAP[X][Y] = 0.
                         
-                            if(Y2 < 0 or Y2 > SIZE-1): 
-                                i = i + 1
-                                continue
-                    
-                            K = 0.5*(ELASTIC[X][Y] + ELASTIC[X2][Y2])
-                        
-                            if(K < 1.): K = 1.
-                            if(K > 10.): K = 10.
-                        
-                            if(i > 4):
-                                if(X == 0 and Y == 0): 
-                                    K = K * 2.
-                                if(X == SIZE-1 and Y == 0): 
-                                    K = K * 2.
-                                if(X == 0 and Y == SIZE-1): 
-                                    K = K * 2.
-                                if(X == SIZE-1 and Y == SIZE-1): 
-                                    K = K * 2.
+                            i = 1
+                            while(i < 9):
+                                X2 = X + IX[i]
+                                Y2 = Y + IY[i]
                             
-                            dx = XP[X2][Y2] - XP[X][Y]
-                            dy = YP[X2][Y2] - YP[X][Y]
-
-                            if(i == 1 or i == 2): 
-                                XAP[X][Y] -= K * dx
-
-                            if(i == 3 or i == 4): 
-                                YAP[X][Y] -= K * dy
-
-                            if(i == 5 or i == 6): 
-                                XAP[X][Y] -= 0.25 * (K * dx + K * dy)
-                                YAP[X][Y] -= 0.25 * (K * dx + K * dy)
-
-                            if(i == 7 or i == 8): 
-                                XAP[X][Y] -= 0.25 * (K * dx - K * dy)
-                                YAP[X][Y] -= 0.25 * (-K * dx + K * dy)
-                                        
-                            i = i + 1
+                                if(X2 < 0 or X2 > SIZE-1): 
+                                    i = i + 1
+                                    continue
+                            
+                                if(Y2 < 0 or Y2 > SIZE-1): 
+                                    i = i + 1
+                                    continue
                         
-                        PAP += XP[X][Y] * XAP[X][Y]
-                        PAP += YP[X][Y] * YAP[X][Y]
+                                K = 0.5*(ELASTIC[X][Y] + ELASTIC[X2][Y2])
+                            
+                                if(K < 1.): K = 1.
+                                if(K > 10.): K = 10.
+                            
+                                if(i > 4):
+                                    if(X == 0 and Y == 0): 
+                                        K = K * 2.
+                                    if(X == SIZE-1 and Y == 0): 
+                                        K = K * 2.
+                                    if(X == 0 and Y == SIZE-1): 
+                                        K = K * 2.
+                                    if(X == SIZE-1 and Y == SIZE-1): 
+                                        K = K * 2.
+                                
+                                dx = XP[X2][Y2] - XP[X][Y]
+                                dy = YP[X2][Y2] - YP[X][Y]
+
+                                if(i == 1 or i == 2): 
+                                    XAP[X][Y] -= K * dx
+
+                                if(i == 3 or i == 4): 
+                                    YAP[X][Y] -= K * dy
+
+                                if(i == 5 or i == 6): 
+                                    XAP[X][Y] -= 0.25 * (K * dx + K * dy)
+                                    YAP[X][Y] -= 0.25 * (K * dx + K * dy)
+
+                                if(i == 7 or i == 8): 
+                                    XAP[X][Y] -= 0.25 * (K * dx - K * dy)
+                                    YAP[X][Y] -= 0.25 * (-K * dx + K * dy)
+                                            
+                                i = i + 1
+                            
+                            PAP += XP[X][Y] * XAP[X][Y]
+                            PAP += YP[X][Y] * YAP[X][Y]
+                        
+                            Y = Y + 1
+                        X = X + 1
+                        
+                    ALPHA = -RR/PAP
                     
-                        Y = Y + 1
-                    X = X + 1
+                    RR1 = 0.0
                     
-                ALPHA = -RR/PAP
-                
-                RR1 = 0.0
-                
+                    X = 0
+                    while(X < SIZE):
+                        Y = 0
+                        while(Y < SIZE):
+                        
+                            DX[X][Y] -= ALPHA * XP[X][Y]
+                            DY[X][Y] -= ALPHA * YP[X][Y]
+                    
+                            XR[X][Y] += ALPHA * XAP[X][Y]
+                            YR[X][Y] += ALPHA * YAP[X][Y]
+                            
+                            RR1 += XR[X][Y] * XR[X][Y]
+                            RR1 += YR[X][Y] * YR[X][Y]
+                    
+                            Y = Y + 1
+                        X = X + 1
+
+                    st.write('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), '          ', end="\r")
+
+                    if(RR1 < MIN): MIN = RR1
+                    
+                    BETA = RR1/RR
+                    
+                    X = 0
+                    while(X < SIZE):
+                        Y = 0
+                        while(Y < SIZE):
+                        
+                            XP[X][Y] = XR[X][Y] + BETA * XP[X][Y]
+                            YP[X][Y] = YR[X][Y] + BETA * YP[X][Y]
+                    
+                            Y = Y + 1
+                        X = X + 1
+                    
+                    RR = RR1
+                    
+                    if(RR > 1000.*MIN):
+                        print('Looks like system is not converging')
+                    
+
+                # Once it's solved we have to decide what to output!
+
+                # Young's Modulus and Poissons ratio
+                XSYST = 0.
+                YSYST = 0.
+                    
                 X = 0
                 while(X < SIZE):
                     Y = 0
                     while(Y < SIZE):
-                    
-                        DX[X][Y] -= ALPHA * XP[X][Y]
-                        DY[X][Y] -= ALPHA * YP[X][Y]
-                
-                        XR[X][Y] += ALPHA * XAP[X][Y]
-                        YR[X][Y] += ALPHA * YAP[X][Y]
-                        
-                        RR1 += XR[X][Y] * XR[X][Y]
-                        RR1 += YR[X][Y] * YR[X][Y]
-                
+                        if(X == 0): XSYST -= DX[X][Y]
+                        if(X == SIZE-1): XSYST += DX[X][Y]
+                        if(Y == 0): YSYST -= DY[X][Y]
+                        if(Y == SIZE-1): YSYST += DY[X][Y]
+
                         Y = Y + 1
                     X = X + 1
 
-                st.write('Residual = ', format(RR1,'.3E'), 'Minimum = ', format(MIN,'.3E'), '          ', end="\r")
+                XSYST /= SIZE
+                YSYST /= SIZE
 
-                if(RR1 < MIN): MIN = RR1
-                
-                BETA = RR1/RR
-                
-                X = 0
-                while(X < SIZE):
-                    Y = 0
-                    while(Y < SIZE):
-                    
-                        XP[X][Y] = XR[X][Y] + BETA * XP[X][Y]
-                        YP[X][Y] = YR[X][Y] + BETA * YP[X][Y]
-                
-                        Y = Y + 1
-                    X = X + 1
-                
-                RR = RR1
-                
-                if(RR > 1000.*MIN):
-                    print('Looks like system is not converging')
-                
-
-            # Once it's solved we have to decide what to output!
-
-            # Young's Modulus and Poissons ratio
-            XSYST = 0.
-            YSYST = 0.
-                
-            X = 0
-            while(X < SIZE):
-                Y = 0
-                while(Y < SIZE):
-                    if(X == 0): XSYST -= DX[X][Y]
-                    if(X == SIZE-1): XSYST += DX[X][Y]
-                    if(Y == 0): YSYST -= DY[X][Y]
-                    if(Y == SIZE-1): YSYST += DY[X][Y]
-
-                    Y = Y + 1
-                X = X + 1
-
-            XSYST /= SIZE
-            YSYST /= SIZE
-
-            YOUNG = (SIZE - 1.) * (FORCE / XSYST)
-            POISSON = YSYST/XSYST
+                YOUNG = (SIZE - 1.) * (FORCE / XSYST)
+                POISSON = YSYST/XSYST
         st.success('Done!')
         #report section 
         st.write('Residual = ', RR)
