@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np 
-from streamlit import caching
 import time
 option = st.sidebar.selectbox("Which Dashboard?", ('Home', '2D Model Page','2D Graph Page', '3D Model Page'), 0)
 st.header(option)
@@ -34,7 +33,8 @@ if option == '2D Model Page':
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
     x = st.number_input("Enter a value for Elastic ", min_value= 0, max_value= 100, value=1, step= 1)
     ELASTIC = [[x for col in range(SIZE) ] for row in range(SIZE)]
-
+    #if (X - SIZE/2)*(X-SIZE/2) + (Y-SIZE/2)*(Y-SIZE/2) < R*R:
+    #elastic = elastic+1
     #The solution requires the displacements and other variables
     DX = [[0. for col in range(SIZE) ] for row in range(SIZE)]
     DY = [[0. for col in range(SIZE) ] for row in range(SIZE)]
@@ -54,9 +54,10 @@ if option == '2D Model Page':
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
-            ELASTIC[X][Y] = 1.
+            ELASTIC[X][Y] = x
             R = (X-0.5*SIZE)*(X-0.5*SIZE)+(Y-0.5*SIZE)*(Y-0.5*SIZE)
-            #if(R < 100.): ELASTIC[X][Y] = 10.
+            if(R < 100.): 
+                ELASTIC[X][Y] = 10.
             Y = Y + 1
         X = X + 1
 
@@ -312,6 +313,7 @@ if option == '2D Model Page':
             X = X + 1
 
         OUTPUT = open("lsm.txt", "w")
+    
         X = 0
         while(X < SIZE):
             Y = 0
@@ -321,10 +323,11 @@ if option == '2D Model Page':
                 Y = Y + 1
             OUTPUT.write(string)
             X = X + 1
-    
+        
         pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
         x, y, z = pts.T
         
+
         fig2 = go.Figure(data = go.Contour(z=z, x=x, y=y))
         st.write(fig2)
 
