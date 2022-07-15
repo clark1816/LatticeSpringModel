@@ -22,8 +22,8 @@ if option == 'Inhomogeneity Example':
     FORCE = 0.1
     
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
-    x = st.slider("Enter a value for Elastic ", 0,  10, 1)
-    ELASTIC = [[x for col in range(SIZE) ] for row in range(SIZE)]
+    userELASTIC = st.slider("Enter a value for Elastic ", 0.0,  10.0, 1.0)
+    ELASTIC = [[userELASTIC for col in range(SIZE) ] for row in range(SIZE)]
     #if (X - SIZE/2)*(X-SIZE/2) + (Y-SIZE/2)*(Y-SIZE/2) < R*R:
     #elastic = elastic+1
     #The solution requires the displacements and other variables
@@ -45,10 +45,10 @@ if option == 'Inhomogeneity Example':
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
-            ELASTIC[X][Y] = 1.
+            ELASTIC[X][Y] = userELASTIC
             R = (X-0.5*SIZE)*(X-0.5*SIZE)+(Y-0.5*SIZE)*(Y-0.5*SIZE)
             if(R < 100.): 
-                ELASTIC[X][Y] = x
+                ELASTIC[X][Y] = 10.
             Y = Y + 1
         X = X + 1
 
