@@ -10,7 +10,7 @@ if option == 'Home':
     st.write('The Inhomogeneity Example page will create a model that will capture the elastic deformation of a particle in a matrix.')
     st.write('If you already have have a data set ready then you can use the 2D Graph Page to upload your Excel, CSV, or .txt file. To get the program to run correctly make sure it is formatted the same as the data file from the model page. It should have no column headers. Finally the first column should contain x cordinates, second should contain y cordinates and the third should contain z cordinates.')
 
-if option == '2D Model Page':
+if option == 'Inhomogeneity Example':
 
     # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
     SIZE = 100
@@ -326,7 +326,7 @@ if option == '2D Model Page':
         st.download_button('Download dat file', f,'result.csv', 'text/csv')
 
 
-if option == '2D Graph Page':
+if option == 'Input Morphology':
     uploaded_file =  st.sidebar.file_uploader(label="upload your excel file here.", type =['xlsx','csv','txt'])
     if uploaded_file is not None:
         try:
