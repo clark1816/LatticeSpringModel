@@ -344,7 +344,7 @@ if option == 'Inhomogeneity Example':
         with open('lsm.txt') as f:
             st.download_button('Download strain data file', f,'result.csv', 'text/csv')
         with open('elasticlsm.txt') as f:
-            st.download_button('Download elastic data file', f,'result.csv', 'text/csv')
+            st.download_button('Download elastic data file', f,'elasticresult.csv', 'text/csv')
 
 
 if option == 'Input Morphology':
