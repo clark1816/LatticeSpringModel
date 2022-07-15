@@ -45,10 +45,10 @@ if option == 'Inhomogeneity Example':
     while(X < SIZE):
         Y = 0
         while(Y < SIZE):
-            ELASTIC[X][Y] = x
+            ELASTIC[X][Y] = 1.
             R = (X-0.5*SIZE)*(X-0.5*SIZE)+(Y-0.5*SIZE)*(Y-0.5*SIZE)
             if(R < 100.): 
-                ELASTIC[X][Y] = 10.
+                ELASTIC[X][Y] = x
             Y = Y + 1
         X = X + 1
 
