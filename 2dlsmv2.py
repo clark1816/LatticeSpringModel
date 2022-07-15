@@ -322,6 +322,18 @@ if option == 'Inhomogeneity Example':
             OUTPUT.write(string)
             X = X + 1
         
+        OUTPUT = open("elasticlsm.txt", "w")
+    
+        X = 0
+        while(X < SIZE):
+            Y = 0
+            while(Y < SIZE):
+                string = str(X) + ' ' + str(Y) + ' ' + str(ELASTIC[X][Y]) + "\n"
+                OUTPUT.write(string)
+                Y = Y + 1
+            OUTPUT.write(string)
+            X = X + 1
+        
         pts = np.loadtxt('lsm.txt',dtype=float, delimiter=' ')
         x, y, z = pts.T
         
@@ -330,7 +342,9 @@ if option == 'Inhomogeneity Example':
         st.write(fig2)
 
         with open('lsm.txt') as f:
-            st.download_button('Download dat file', f,'result.csv', 'text/csv')
+            st.download_button('Download strain data file', f,'result.csv', 'text/csv')
+        with open('elasticlsm.txt') as f:
+            st.download_button('Download elastic data file', f,'result.csv', 'text/csv')
 
 
 if option == 'Input Morphology':
@@ -342,7 +356,7 @@ if option == 'Input Morphology':
             pts = np.loadtxt('results2d.txt',dtype=float, delimiter=' ')
             x1, y1, ela = pts.T
             if df is not None:
-                #st.write(df)
+                st.write(df)
                 # A regular 2D Lattice Spring Model. 100x100 and using conjugate gradient solver.
                 SIZE = 100
 
