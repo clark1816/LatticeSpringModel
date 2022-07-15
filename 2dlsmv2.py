@@ -329,8 +329,8 @@ if option == 'Inhomogeneity Example':
         fig2 = go.Figure(data = go.Contour(z=z, x=x, y=y))
         st.write(fig2)
 
-    with open('lsm.txt') as f:
-        st.download_button('Download dat file', f,'result.csv', 'text/csv')
+        with open('lsm.txt') as f:
+            st.download_button('Download dat file', f,'result.csv', 'text/csv')
 
 
 if option == 'Input Morphology':
@@ -655,3 +655,21 @@ if option == 'Input Morphology':
         except Exception as e:
             st.write("file not in correct file please check example page for file format.")
             #df = pd.read_csv(uploaded_file)
+            
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
