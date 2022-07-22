@@ -29,7 +29,7 @@ if option == 'Inhomogeneity Example':
     if num < 10:
         rad = 100.
     elif num ==15:
-        rad =200.
+        rad =225.
     else:
         rad = 300.
     #if (X - SIZE/2)*(X-SIZE/2) + (Y-SIZE/2)*(Y-SIZE/2) < R*R:
