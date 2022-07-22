@@ -370,13 +370,15 @@ if option == 'Input Morphology':
 				# The elastic moduli - from 1 to 10. Assuming C's = 0 for now
 				# The elastic moduli - from 1 to 10. Assuming C's = 0 for now
 				l = list(ela)
-				ELASTIC = [[n for col in range(SIZE) ] for row in range(SIZE)]
+				
 				i = 0
 				for n in l:
 					X = i % SIZE
 					Y = i % SIZE
 					ELASTIC[X][Y] = n                       
 					i=i+1
+					
+				ELASTIC = [[n for col in range(SIZE) ] for row in range(SIZE)]
 				 
 				#The solution requires the displacements and other variables
 				DX = [[0. for col in range(SIZE) ] for row in range(SIZE)]
