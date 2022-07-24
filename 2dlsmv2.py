@@ -23,7 +23,7 @@ if option == 'Inhomogeneity Example':
     FORCE = 0.1
     
     # The elastic moduli - from 1 to 10. Assuming C's = 0 for now
-    userELASTIC = st.slider("Enter a value for Elastic ",  min_value=0.0, max_value=10.0, value=1.0, step=.5)
+    userELASTIC = st.slider("Enter a value for Elastic ",  min_value=-1.0, max_value=10.0, value=1.0, step=.5)
     ELASTIC = [[1.0 for col in range(SIZE) ] for row in range(SIZE)]
     num = st.slider("Enter a value for radius ", min_value=10, max_value=20, value=10, step=5)
     if num < 10:
@@ -108,8 +108,10 @@ if option == 'Inhomogeneity Example':
                     
                         K = 0.5*(ELASTIC[X][Y] + ELASTIC[X2][Y2])
                         
-                        if(K < 1.): K = 1.
-                        if(K > 10.): K = 10.
+                        # if(K < 1.): 
+                        #     K = 1.
+                        if(K > 10.): 
+                            K = 10.
                         
                         if(i > 4):
                             if(X == 0 and Y == 0): 
@@ -187,7 +189,7 @@ if option == 'Inhomogeneity Example':
                         
                                 K = 0.5*(ELASTIC[X][Y] + ELASTIC[X2][Y2])
                             
-                                if(K < 1.): K = 1.
+                                #if(K < 1.): K = 1.
                                 if(K > 10.): K = 10.
                             
                                 if(i > 4):
