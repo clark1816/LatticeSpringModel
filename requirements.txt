@@ -1,5 +1,5 @@
 click<=8.0.4
-streamlit==1.11.0
+streamlit==1.11.1
 pandas==1.4.2
 plotly_express==0.4
 openpyxl==3.0.9
