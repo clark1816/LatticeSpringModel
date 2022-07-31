@@ -8,6 +8,8 @@ option = st.sidebar.selectbox("Which Dashboard?", ('Home','Inhomogeneity Example
 st.header(option)
 if option == 'Home':
     st.subheader('2D LSM Informaiton')
+    st.warning('Webpage may be slow due to program CPU use.')
+    st.write('Please keep an eye on the top right hand corner where it says running to see if the program is runnning.')
     st.write('The Inhomogeneity Example page will create a model that will capture the elastic deformation of a particle in a matrix.')
     st.write('If you already have have a data set ready then you can use the Input Morphology to upload your Excel, CSV, or .txt file. To get the program to run correctly make sure it is formatted the same as the data file from the model page. It should have no column headers. The first column should contain x cordinates, second should contain y cordinates and the third should contain elastic. The radius is set to 10 on this model.')
 
